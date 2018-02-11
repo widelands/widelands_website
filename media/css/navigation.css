@@ -3,6 +3,7 @@
 div.searchBox {
 	height: 20px;
 	padding: 15px;
+	min-width: 161px;
 }
 
 div.searchBoxInner {
@@ -26,14 +27,14 @@ input.searchField {
 	padding: 0px;
 }
 
-.fake_selector{
+.fake_selector {
 	width: 80px;
 	overflow: hidden;
 }
 
-.fake_selector select{
+.fake_selector select {
 	-webkit-appearance: none;
-   -moz-appearance: none;
+	-moz-appearance: none;
 	width: 18px;
 	height: 18px;
 	background-color: rgba(90, 74, 49, 1);
@@ -44,7 +45,7 @@ input.searchField {
 	background-repeat: no-repeat;
 	background-position: center;
 	appearance: none;
-   padding: 2px 20px 2px 2px;
+	padding: 2px 20px 2px 2px;
 }
 
 select::-ms-expand {
@@ -57,25 +58,26 @@ select.selection option {
 }
 
 div#topmenu {
-	position: relative;
-	z-index: 5;
-	top: -8px;
-	clear: both;
-	height: 50px;
-	margin-bottom: 22px;
-	background-color: #695536;
-	background-image: url("../img/wood.png");
-	border: 1px solid black;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	border-radius: 4px 0px 4px 0px;
-	-moz-border-radius: 4px 0px 4px 0px;
-	-webkit-border-radius: 4px 0px 4px 0px;
-	-khtml-border-radius: 4px 0px 4px 0px;
+    position: relative;
+    z-index: 5;
+    top: -8px;
+    display: flex;
+    width: 100%;
+    margin-bottom: 22px;
+    background-color: #695536;
+    background-image: url(../img/wood.png);
+    border: 1px solid black;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+    border-radius: 4px 0px 4px 0px;
+    -moz-border-radius: 4px 0px 4px 0px;
+    -webkit-border-radius: 4px 0px 4px 0px;
+    -khtml-border-radius: 4px 0px 4px 0px;
 }
 
 ul.menu {
 	margin: 0px;
 	padding: 0px;
+	width: 100%;
 }
 
 ul.menu li {
@@ -109,6 +111,7 @@ ul.menu li a.active {
 ul.menu li ul {
 	display: none;
 	position: absolute;
+	z-index: 10;
 	top: 50px;
 	left: -1px;
 	background-color: #695536;
