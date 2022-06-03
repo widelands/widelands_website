@@ -11,6 +11,7 @@ import os
 import os.path
 import locale
 import codecs
+import random
 
 
 def mainpage(request):
@@ -25,8 +26,12 @@ def legal_notice(request):
             name = form.cleaned_data['forename'] + \
                 ' ' + form.cleaned_data['surname']
             subject = 'An inquiry over the webpage'
+            question = form.cleaned_data['question']
+            answer = form.cleaned_data['answer']
             message = '\n'.join(['From: ' + name,
                                  'EMail: ' + form.cleaned_data['email'],
+                                 'Question: ' + question,
+                                 'Answer: ' + answer,
                                  'Inquiry:',
                                  form.cleaned_data['inquiry']])
             sender = 'legal_note@widelands.org'
@@ -36,17 +41,58 @@ def legal_notice(request):
             for recipient in settings.INQUIRY_RECIPIENTS:
                 recipients.append(recipient[1])
 
-            send_mail(subject, message, sender,
-                      recipients, fail_silently=False)
+            # check if the answer is right
+            q_a = False
+            for i in range(len(settings.INQUIRY_QUESTION)):
+                if settings.INQUIRY_QUESTION[i][0] == question:
+                    if answer.lower() in settings.INQUIRY_QUESTION[i][1:len(settings.INQUIRY_QUESTION[i])]:
+                        q_a = True
+                        break
+
+            # if answer is right send mail
+            if q_a:
+                send_mail(subject, message, sender,
+                        recipients, fail_silently=False)
+            else:
+                # nur zum testen, nach dem ausrollen das else entfernen ;)
+                send_mail('ERROR ' + subject, message, sender,
+                        recipients, fail_silently=False)
+
             # Redirect after POST
             return HttpResponseRedirect('/legal_notice_thanks/')
 
     else:
         form = ContactForm()  # An unbound form
 
+    # get chieftains from development.json
+    # chieftains backup hard coded
+    chieftains = [
+            'Benedikt Straub (Nordfriese) (Since 2022).',
+            'GunChleoc (2016 – 2022)',
+            'Holger Rapp (SirVer) (2001 – 2016)',
+            ]
+    try:
+        with open(settings.WIDELANDS_SVN_DIR + 'data/txts/developers.json', 'r') as f:
+            json_data = json.load(f)['developers']
+
+        for head in json_data:
+            if head['heading'] == 'Chieftains':
+                for entry in head['entries']:
+                    if 'members' in list(entry.keys()):
+                        chieftains = entry['members']
+                        break
+
+    except IOError:
+        chieftains = ['ERROR:', "Couldn't find developer file!"]
+
+    # random number for random question
+    question_rnum = random.randint(0, len(settings.INQUIRY_QUESTION) - 1)
+
     return render(request, 'mainpage/legal_notice.html', {
         'form': form,
         'inquiry_recipients': settings.INQUIRY_RECIPIENTS,
+        'question': settings.INQUIRY_QUESTION[question_rnum][0],
+        'chieftains': chieftains,
     })
 
 
